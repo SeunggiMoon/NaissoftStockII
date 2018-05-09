@@ -173,6 +173,11 @@ int main(void)
 		{
 			hour = 0;
 			interest();
+
+			gotoxy(2, 1);
+			printf("자동 저장 중...");
+			save();
+			
 			day++;
 		}
 		if (day > days[month] - 1)
