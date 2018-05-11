@@ -171,12 +171,12 @@ int main(void)
 		}
 		if (hour > 23)
 		{
-			hour = 0;
-			interest();
-
 			gotoxy(2, 1);
 			printf("자동 저장 중...");
 			save();
+
+			hour = 0;
+			interest();
 			
 			day++;
 		}
