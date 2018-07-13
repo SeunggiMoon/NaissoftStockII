@@ -14,7 +14,7 @@
 #define MAX_HEADLINE 5
 #define MAX_ARTICLE 3
 
-#define TAX(money) (30000 + ((money) / 100))
+#define TAX(money) (30000 + ((money) / 10))
 
 extern FILE input, output;
 extern int month, day, hour, achour;

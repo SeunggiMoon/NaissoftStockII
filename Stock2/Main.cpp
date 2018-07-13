@@ -165,7 +165,7 @@ int main(void)
 		{
 			for (int i = 0; i < MAX_COMPANY; i++)
 			{
-				if (rand() % 2 == 0) ifGood[i] = true;
+				if (rand() % 3 == 0) ifGood[i] = true;
 				else ifGood[i] = false;
 			}
 		}

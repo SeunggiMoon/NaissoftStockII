@@ -169,7 +169,7 @@ void loan(int lmoney)
 
 void interest()
 {
-	loanMoney += (loanMoney * 0.05);
+	loanMoney += (loanMoney * 0.1);
 }
 
 void payback()
@@ -211,19 +211,17 @@ void sellStock(int i)
 	
 	Money += (StockPrice[f->company]);
 	DeleteStock(f);
-	
+	Stocks--;	
 }
 
 void showStockList()
 {
 	system("cls");
-	int j, k;
+	int j, k = 1;
 	char i;
-	k = 1;
+
 	if (Stocks <= 0)
-	{
 		printf("\n 주식이 없습니다.\n");
-	}
 	else
 	{
 		do
