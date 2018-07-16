@@ -7,10 +7,13 @@
 #include "StockFunctions.h"
 #include "Stock.h"
 
-unsigned long Money;
-int StockPrice[MAX_COMPANY], PrevStockPrice[MAX_COMPANY], Stocks, StockDeal, loanMoney, companyOrder[MAX_COMPANY];
+unsigned long long Money;
+unsigned int StockPrice[MAX_COMPANY], PrevStockPrice[MAX_COMPANY], Stocks, StockDeal, loanMoney;
+int companyOrder[MAX_COMPANY];
 int GraphData[MAX_COMPANY][48] = { 0 };
 bool ifGood[MAX_COMPANY];
+bool goodEvent[MAX_COMPANY];
+bool badEvent[MAX_COMPANY];
 
 char *CompanyName[MAX_COMPANY] =
 {
@@ -28,11 +31,9 @@ char *CompanyName[MAX_COMPANY] =
 
 void ChangeStockPrice()
 {
-	srand((int)time(NULL));
-
 	for (int i = 0; i < MAX_COMPANY; i++)
 	{
-		if (ifGood[i] == true)
+		if (ifGood[i] == true && goodEvent[i] == false)
 		{
 			if ((rand() % 2) == 0)
 			{
@@ -43,7 +44,8 @@ void ChangeStockPrice()
 				StockPrice[i] -= (rand() % 100);
 			}
 		}
-		else
+		else if (ifGood[i] == true && goodEvent[i] == true) StockPrice[i] += (rand() % 2000);
+		else if (ifGood[i] == false && badEvent[i] == false)
 		{
 			if ((rand() % 2) == 0)
 			{
@@ -54,6 +56,8 @@ void ChangeStockPrice()
 				StockPrice[i] -= (rand() % 1000);
 			}
 		}
+		else StockPrice[i] -= (rand() % 1500);
+
 		if (StockPrice[i] < 2000) StockPrice[i] = 2000;
 		StockPrice[i] = StockPrice[i] / 10 * 10;
 	}
@@ -161,7 +165,7 @@ void PrintStockPrice(int i)
 	printf("\n");
 }
 
-void loan(int lmoney)
+void loan(unsigned int lmoney)
 {
 	loanMoney += lmoney;
 	Money += lmoney;
@@ -211,7 +215,8 @@ void sellStock(int i)
 	
 	Money += (StockPrice[f->company]);
 	DeleteStock(f);
-	Stocks--;	
+	Stocks--;
+	StockDeal++;
 }
 
 void showStockList()

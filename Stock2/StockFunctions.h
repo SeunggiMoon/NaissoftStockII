@@ -1,7 +1,7 @@
 #include "Arts.h"
 
 #define DEF_STOCK 9000
-#define DEF_MONEY 20000
+#define DEF_MONEY 10000
 #define MAX_COMPANY 10
 
 extern int companyOrder[MAX_COMPANY];
@@ -13,7 +13,7 @@ void ShowStockPrice(int);
 
 void PrintStockPrice(int);
 
-void loan(int);
+void loan(unsigned int);
 
 void interest();
 

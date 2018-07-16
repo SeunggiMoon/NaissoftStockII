@@ -30,6 +30,15 @@ char *BadNews[MAX_NEWS] =
 	" 주식 팔자.. 외국인 대규모 매도에 주가 급락",
 };
 
+char *BadEventNews[MAX_NEWS] =
+{
+	" 압수수색 돌입",
+	", 검사 자료 조작 밝혀져 충격",
+	", 前 정부와 정경유착 의혹... 수사 돌입",
+	" 노사 갈등 최악... 공장 가동 전면 중단",
+	" CEO 구치소 구금",
+};
+
 char *Infos[MAX_COMPANY] =
 {
 	" Naissoft는 자칭 대한민국 최대 규모의 소프트웨어 개발 업체입니다.\n 유틸리티, 게임 등 여러 가지 프로그램들을 개발하고 있습니다.",
@@ -88,32 +97,67 @@ char *goodArticle[MAX_ARTICLE] =
 다.",
 };
 
+char *badArticle[MAX_ARTICLE] =
+{
+	"이(가) 악재에 직면했다.\n\
+신제품의 부진과 노사 간 갈등으로 인해 \n\
+투자가 급격히 줄어들고 있는 중이다.\n\
+현재로서는 잠시 지켜보자는 신중론이 우\n\
+세하나 전망은 밝지 않은 것으로 보인다.\n\
+이같은 상황이 지속될 경우 결국 구조조 \n\
+정에 돌입할 것으로 예상돼 갈등이 증폭 \n\
+되고 있다.",
+
+	"이(가) 수출 부진으로 고\n\
+초를 겪고 있다. 최근 미국의 관세 정책\n\
+으로 특히 타격을 크게 입은 이 기업은 \n\
+미국 시장 철수설까지 돌고 있는 중이다.\n\
+어느 때보다도 임직원들의 혜안이 필요한 \n\
+시점으로 보인다.",
+
+	"의 상황이 점점 나빠지고\n\
+있다. 최근의 부진에서 벗어나지 못한 모 \n\
+습이다. 이대로라면 특단의 대책이 필요 \n\
+해 보인다. 한 전문가는 본지와의 인터뷰 \n\
+에서 \"회사의 구조에 손을 좀 대야 할 것 \n\
+입니다.\"라고 대답하며 근본적 문제의 \n\
+해결이 우선이라고 주장하였다.",
+};
+
 int days[12] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
 
 void init()
 {
 	Money = DEF_MONEY;
 	for (int i = 0; i < MAX_COMPANY; i++) StockPrice[i] = 9000;
-	for (int i = 0; i < MAX_COMPANY; i++) ifGood[i] = true;
+	for (int i = 0; i < MAX_COMPANY; i++)
+	{
+		ifGood[i] = true;
+		goodEvent[i] = false;
+		badEvent[i] = false;
+	}
 	Stocks = StockDeal = 0;
 	loanMoney = 0;
 	ChangeStockPrice();
 	hour++;
 	viewmode = timemode = 0;
+	setcursortype(NOCURSOR);
 }
 
 void ShowMain()
 {
 	gotoxy(0, 1);
-	printf(" Stock II - Naissoft 주식 게임 2\n ver α 1.4.0713\n\n B 사기, S 팔기, V 목록, E 저장, I 회사 정보, 8 / 2 회사 선택, Esc 메뉴");
+	printf(" Stock II - Naissoft 주식 게임 2\n ");
+	printf(VERSION);
+	printf("\n\n B 사기, S 팔기, V 목록, E 저장, I 회사 정보, 8 / 2 회사 선택, Esc 메뉴");
 	if (timemode == 1) printf("\n W 기다리기");
 	gotoxy(0, 5);
-	printf("\n 현재 내 돈 : %d원, 갚아야 할 돈 : %d원\n\n\n\n", Money, loanMoney);
+	printf("\n 현재 내 돈 : %lld원, 갚아야 할 돈 : %d원, 보유 주식 %d주\n\n\n\n", Money, loanMoney, Stocks);
 
 	ShowStockPrice(viewmode);
 
-	printf("\n %d월 %d일 %d시", month + 1, day + 1, hour);
-	printf("\n\n 이번 달 납부할 세금은 %d원입니다. %d일 남았습니다.\n", TAX(Money), days[month] - day);
+	printf("\n %d월 %d일 %d시   ", month + 1, day + 1, hour);
+	printf("\n\n 이번 달 납부할 세금은 %lld원입니다. %d일 남았습니다.\n", TAX(Money), days[month] - day);
 }
 
 void load()
@@ -152,8 +196,20 @@ void load()
 		ifGood[i] = _rotr(ifGood[i], 1);
 	}
 
-	fscanf(save, "%d %d %d %d %d %d %d %d %d", &Money, &loanMoney, &Stocks, &StockDeal, &month, &day, &hour, &viewmode, &timemode);
-	Money = _rotr(Money, 1); loanMoney = _rotr(loanMoney, 1); Stocks = _rotr(Stocks, 1);
+	for (int i = 0; i < MAX_COMPANY; i++)
+	{
+		fscanf(save, "%d ", &goodEvent[i]);
+		goodEvent[i] = _rotr(goodEvent[i], 1);
+	}
+
+	for (int i = 0; i < MAX_COMPANY; i++)
+	{
+		fscanf(save, "%d ", &badEvent[i]);
+		badEvent[i] = _rotr(badEvent[i], 1);
+	}
+
+	fscanf(save, "%lld %d %d %d %d %d %d %d %d", &Money, &loanMoney, &Stocks, &StockDeal, &month, &day, &hour, &viewmode, &timemode);
+	Money = _rotr64(Money, 1); loanMoney = _rotr(loanMoney, 1); Stocks = _rotr(Stocks, 1);
 	StockDeal = _rotr(StockDeal, 1); month = _rotr(month, 1); day = _rotr(day, 1); hour = _rotr(hour, 1);
 
 	fclose(save);
@@ -176,7 +232,13 @@ void save()
 	for (int i = 0; i < MAX_COMPANY; i++)
 		fprintf(save, "%d ", _rotl(ifGood[i], 1));
 
-	fprintf(save, "%d %d %d %d %d %d %d %d %d", _rotl(Money, 1), _rotl(loanMoney, 1), _rotl(Stocks, 1), _rotl(StockDeal, 1),
+	for (int i = 0; i < MAX_COMPANY; i++)
+		fprintf(save, "%d ", _rotl(goodEvent[i], 1));
+
+	for (int i = 0; i < MAX_COMPANY; i++)
+		fprintf(save, "%d ", _rotl(badEvent[i], 1));
+
+	fprintf(save, "%lld %d %d %d %d %d %d %d %d", _rotl64(Money, 1), _rotl(loanMoney, 1), _rotl(Stocks, 1), _rotl(StockDeal, 1),
 		_rotl(month, 1), _rotl(day, 1), _rotl(hour, 1), viewmode, timemode);
 
 	fclose(save);
@@ -193,13 +255,13 @@ void showTipNews()
 	{
 		int comp = rand() % MAX_COMPANY;
 		if (ifGood[comp] == true) printf(" NEWS : %s%s", CompanyName[comp], GoodNews[rand() % MAX_NEWS]);
-		else printf(" NEWS : %s%s", CompanyName[comp], BadNews[rand() % MAX_NEWS]);
+		else if (badEvent[comp] == false) printf(" NEWS : %s%s", CompanyName[comp], BadNews[rand() % MAX_NEWS]);
+		else printf(" 속보 : %s%s", CompanyName[comp], BadEventNews[rand() % MAX_NEWS]);
 	}
 }
 
 void buyMenu(int order)
 {
-	char ch;
 	int amount;
 
 	system("cls");
@@ -227,14 +289,14 @@ void sellMenu()
 	while (true)
 	{	
 		titleLine("주식 팔기");
-		printf("\n [ W / S로 팔 주식을 고르세요. A / D로 더 볼 수 있습니다. B를 누르면 팝니다. ]\n\n");
+		printf("\n [ W / S로 팔 주식을 고르세요. A / D로 더 볼 수 있습니다. B를 누르면 팝니다. ]\n\n 현재 보유 주식 %d주\n", Stocks);
 		j = 1;
 		for (now = head->next; now; now = now->next)
 		{
 			if (j >= k && j < k + 10) printf("\n %d. 회사 : %-20s, 가격 : %d원", j, CompanyName[now->company], now->price);
 			j++;
 		}
-		printf("\n 돌아가려면 Q를 누르세요.\n");
+		printf("\n\n 돌아가려면 Q를 누르세요.\n");
 		
 		Stock *f = FindStock(idx - 1);
 		if (f == NULL) {
@@ -242,7 +304,7 @@ void sellMenu()
 			return;
 		}	
 	
-		printf("\n [ 선택 주식 정보 ]\n\n 번호 : %d\n 회사 : %s\n 가격 : %d\n 현재 가격 : %d\n 매도 이익 : %d", idx, CompanyName[f->company], f->price, StockPrice[f->company], StockPrice[f->company] - f->price);
+		printf("\n [ 선택 주식 정보 ]\n\n 번호 : %d\n 회사 : %s\n 가격 : %d원\n 현재 가격 : %d원\n 매도 이익 : %d원\n", idx, CompanyName[f->company], f->price, StockPrice[f->company], StockPrice[f->company] - f->price);
 		
 		ch = getch();
 		
@@ -350,13 +412,13 @@ void settingMenu()
 
 void loanMenu()
 {
-	int loanmoney;
+	unsigned int loanmoney;
 
 	system("cls");
 	titleLine("대  출");
-	printf("\n 얼마를 대출받으시겠습니까?");
+	printf("\n 얼마를 대출받으시겠습니까? (한도 10억)");
 	scanf("%d", &loanmoney);
-	loan(loanmoney);
+	if (loanmoney <= 1000000000) loan(loanmoney);
 
 	return;
 }
@@ -449,7 +511,7 @@ void drawNewspaper(int comp)
 	}
 	
 	gotoxy(88, 12);
-	printf("羅  所  日  報     %d월 %d일", month + 1, day + 1);
+	printf("羅  所  日  報    %d월 %d일", month + 1, day + 1);
 	gotoxy(76, 13);
 	printf("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
 	
@@ -475,6 +537,23 @@ void drawNewspaper(int comp)
 				gotoxy(76, 16 + cnt);
 			}
 			else putchar(goodArticle[articleNo][i]);
+			i++;
+		}
+	}
+	else
+	{
+		int i = 0;
+		int articleNo = rand() % MAX_ARTICLE;
+		int cnt = 0;
+		printf(" %s", CompanyName[comp]);
+		while (badArticle[articleNo][i] != '\0')
+		{
+			if (badArticle[articleNo][i] == '\n')
+			{
+				cnt++;
+				gotoxy(76, 16 + cnt);
+			}
+			else putchar(badArticle[articleNo][i]);
 			i++;
 		}
 	}

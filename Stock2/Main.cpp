@@ -10,7 +10,7 @@ int main(void)
 	int menu, cnt, order;
 	char c, pausemenu;
 
-	system("title Stock 2 - 주식 게임 2");
+	system("title Stock II " VERSION);
 
 	system("mode con: cols=120 lines=40");
 
@@ -21,6 +21,7 @@ int main(void)
 
 	InitStock();
 	init();
+	loan(20000);
 	cnt = month = day = hour = order = 0;
 
 	switch (menu)
@@ -38,11 +39,16 @@ int main(void)
 	default:
 		break;
 	}
-
 	system("cls");
-	
+
 	drawNewspaper(companyOrder[order]);
-	
+
+	for (int i = 0; i < MAX_COMPANY; i++)
+	{
+		if (rand() % 3 == 0) ifGood[i] = true;
+		else ifGood[i] = false;
+	}
+
 	while (true)
 	{	
 		ShowMain();
@@ -51,9 +57,9 @@ int main(void)
 		
 		if (Money <= 0)
 		{
-			printf("\n 파산... 3000원 대출해 드리겠습니다.");
+			printf("\n 파산... 대출해 드리겠습니다.");
 			getchar();
-			loan(3000);
+			loan(30000);
 			system("cls");
 		}
 		
@@ -155,13 +161,18 @@ int main(void)
 		{
 			ChangeStockPrice();
 			UpdateGraphData();
+			hour++;
 		}
-		
-		if (cnt % 20 == 0) hour++;
 
 		if (cnt % 60 == 0) showTipNews();
 
-		if (hour == 1)
+	//	if ((cnt + 20) % 3360 == 0)
+		//{
+		//	int comp = 0;
+		//	while ()
+	//	}
+
+		if (hour == 0)
 		{
 			for (int i = 0; i < MAX_COMPANY; i++)
 			{
@@ -177,8 +188,8 @@ int main(void)
 
 			hour = 0;
 			interest();
-			
 			day++;
+			srand((int)time(NULL));
 		}
 		if (day > days[month] - 1)
 		{
