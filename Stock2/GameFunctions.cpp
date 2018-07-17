@@ -289,7 +289,7 @@ void sellMenu()
 	while (true)
 	{	
 		titleLine("주식 팔기");
-		printf("\n [ W / S로 팔 주식을 고르세요. A / D로 더 볼 수 있습니다. B를 누르면 팝니다. ]\n\n 현재 보유 주식 %d주\n", Stocks);
+		printf("\n [ W / S : 주식 번호 고르기  A / D : 넘겨보기  B : 팔기  Z / C : 100개씩 넘기기 ]\n\n 현재 보유 주식 %d주\n", Stocks);
 		j = 1;
 		for (now = head->next; now; now = now->next)
 		{
@@ -325,6 +325,14 @@ void sellMenu()
 			case 'S':
 			case 's':
 				if (idx < j) idx++;
+				break;
+			case 'Z':
+			case 'z':
+				if (idx - 100 > 0) idx -= 100;
+				break;
+			case 'C':
+			case 'c':
+				if (idx + 100 < j - 1) idx += 100;
 				break;
 			case 'Q':
 			case 'q':

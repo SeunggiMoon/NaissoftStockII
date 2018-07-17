@@ -7,7 +7,7 @@
 #include <stdlib.h>
 #include <Windows.h>
 
-#define VERSION "ес1.5.0716"
+#define VERSION "ес1.5.0717"
 
 #define DELAY 50
 
