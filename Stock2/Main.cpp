@@ -50,8 +50,6 @@ int main(void)
 
 	drawNewspaper(companyOrder[order]);
 
-	Money = 10000000000000;
-
 	while (true)
 	{	
 		ShowMain();
