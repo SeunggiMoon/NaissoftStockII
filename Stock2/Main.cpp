@@ -29,6 +29,13 @@ int main(void)
 	case 1:
 		ChangeStockPrice();
 		save();
+
+		for (int i = 0; i < MAX_COMPANY; i++)
+		{
+			if (rand() % 3 == 0) ifGood[i] = true;
+			else ifGood[i] = false;
+		}
+
 		break;
 	case 2:
 		load();
@@ -42,12 +49,6 @@ int main(void)
 	system("cls");
 
 	drawNewspaper(companyOrder[order]);
-
-	for (int i = 0; i < MAX_COMPANY; i++)
-	{
-		if (rand() % 3 == 0) ifGood[i] = true;
-		else ifGood[i] = false;
-	}
 
 	while (true)
 	{	
@@ -88,6 +89,7 @@ int main(void)
 			titleLine("일시 정지");
 			printf(" 1. 통  계\n\n 2. 대  출\n\n 3. 갚  기\n\n 4. 설  정\n\n 5. 끝내기\n\n Esc 돌아가기");
 
+			clearbuffer();
 			pausemenu = getch();
 			
 			switch (pausemenu)
@@ -166,18 +168,30 @@ int main(void)
 
 		if (cnt % 60 == 0) showTipNews();
 
-	//	if ((cnt + 20) % 3360 == 0)
-		//{
-		//	int comp = 0;
-		//	while ()
-	//	}
+		
+		if ((cnt - 20) % 3360 == 0)
+		{
+			int comp = 100;
+			while (!(goodEvent[comp] == false && badEvent[comp] == false))
+				comp = rand() % MAX_COMPANY;
+
+			for (int i = 0; i < MAX_COMPANY; i++)
+				goodEvent[i] = badEvent[i] = false;
+
+			if (ifGood[comp] == true) goodEvent[comp] = true;
+			else badEvent[comp] = true;
+		}
+		
 
 		if (hour == 0)
 		{
 			for (int i = 0; i < MAX_COMPANY; i++)
 			{
-				if (rand() % 3 == 0) ifGood[i] = true;
-				else ifGood[i] = false;
+				if (rand() % 3 == 0)
+				{
+					if (goodEvent[i] == false && badEvent[i] == false) ifGood[i] = true;
+				}
+				else if (goodEvent[i] == false && badEvent[i] == false) ifGood[i] = false;
 			}
 		}
 		if (hour > 23)

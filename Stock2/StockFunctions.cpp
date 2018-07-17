@@ -197,7 +197,7 @@ void buyStock(int order, int amount)
 
 			Stocks++;
 			StockDeal++;
-			printf(" %d원을 주고 번째 주식을 구입하였습니다. 주식이 %d개입니다.\n", StockPrice[order], Stocks);
+			printf("\n %d원을 주고 주식을 구입하였습니다. 보유 주식은 %d주입니다.\n\n", StockPrice[order], Stocks);
 			Money -= StockPrice[order];
 			printf(" 남은 돈은 %d원입니다.\n", Money);
 		}
