@@ -7,6 +7,10 @@
 *.userosscache
 *.sln.docstates
 
+# Naissoft save files
+*.ns2
+*.ns3
+
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
 
